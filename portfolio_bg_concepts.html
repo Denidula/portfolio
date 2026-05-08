@@ -1,0 +1,170 @@
+
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: var(--font-sans); }
+.wrapper { display: flex; flex-direction: column; gap: 20px; padding: 1rem 0; }
+.card { border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); overflow: hidden; }
+.preview { height: 200px; position: relative; overflow: hidden; }
+.info { padding: 14px 16px; background: var(--color-background-primary); }
+.title { font-size: 15px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 4px; }
+.desc { font-size: 13px; color: var(--color-text-secondary); line-height: 1.5; }
+.tag { display: inline-block; font-size: 11px; padding: 2px 8px; border-radius: var(--border-radius-md); margin-top: 8px; margin-right: 4px; background: var(--color-background-secondary); color: var(--color-text-secondary); border: 0.5px solid var(--color-border-tertiary); }
+
+/* === CONCEPT 1: Particle Network === */
+#c1 { background: #050a12; }
+
+/* === CONCEPT 2: Code Rain === */
+#c2 { background: #060d06; }
+
+/* === CONCEPT 3: Morphing Grid === */
+#c3 { background: #080812; }
+</style>
+
+<div class="wrapper">
+
+  <!-- Concept 1 -->
+  <div class="card">
+    <div class="preview" id="c1">
+      <canvas id="canvas1" style="width:100%;height:100%;display:block;"></canvas>
+    </div>
+    <div class="info">
+      <div class="title">① パーティクルネットワーク</div>
+      <div class="desc">点と点が自律的に動き、近づくと線でつながる。動的だが落ち着いていて、技術力の連想を呼ぶ定番の手法。</div>
+      <span class="tag">Canvas API</span><span class="tag">軽量</span><span class="tag">汎用性高め</span>
+    </div>
+  </div>
+
+  <!-- Concept 2 -->
+  <div class="card">
+    <div class="preview" id="c2">
+      <canvas id="canvas2" style="width:100%;height:100%;display:block;"></canvas>
+    </div>
+    <div class="info">
+      <div class="title">② コードレイン</div>
+      <div class="desc">ランダムな文字が列ごとに流れ落ちる。マトリックスオマージュ。エンジニアらしさが直球で伝わる演出。</div>
+      <span class="tag">Canvas API</span><span class="tag">インパクト大</span><span class="tag">個性強め</span>
+    </div>
+  </div>
+
+  <!-- Concept 3 -->
+  <div class="card">
+    <div class="preview" id="c3">
+      <canvas id="canvas3" style="width:100%;height:100%;display:block;"></canvas>
+    </div>
+    <div class="info">
+      <div class="title">③ グロースフィア</div>
+      <div class="desc">複数の光球がゆっくり膨張・収縮しながら漂う。モダンでアンビエントな印象。テキストの視認性も保ちやすい。</div>
+      <span class="tag">CSS + Canvas</span><span class="tag">洗練</span><span class="tag">コンテンツ邪魔しない</span>
+    </div>
+  </div>
+
+</div>
+
+<script>
+(function() {
+  function resize(canvas) {
+    const rect = canvas.parentElement.getBoundingClientRect();
+    canvas.width = rect.width;
+    canvas.height = rect.height;
+  }
+
+  /* ===== CONCEPT 1: Particle Network ===== */
+  const c1 = document.getElementById('canvas1');
+  const ctx1 = c1.getContext('2d');
+  resize(c1);
+  const P1 = [];
+  for (let i = 0; i < 60; i++) {
+    P1.push({
+      x: Math.random() * c1.width,
+      y: Math.random() * c1.height,
+      vx: (Math.random() - 0.5) * 0.6,
+      vy: (Math.random() - 0.5) * 0.6,
+      r: Math.random() * 2 + 1
+    });
+  }
+  function draw1() {
+    ctx1.clearRect(0, 0, c1.width, c1.height);
+    P1.forEach(p => {
+      p.x += p.vx; p.y += p.vy;
+      if (p.x < 0 || p.x > c1.width) p.vx *= -1;
+      if (p.y < 0 || p.y > c1.height) p.vy *= -1;
+      ctx1.beginPath();
+      ctx1.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx1.fillStyle = '#4a9eff';
+      ctx1.fill();
+    });
+    for (let i = 0; i < P1.length; i++) {
+      for (let j = i + 1; j < P1.length; j++) {
+        const dx = P1[i].x - P1[j].x;
+        const dy = P1[i].y - P1[j].y;
+        const d = Math.sqrt(dx * dx + dy * dy);
+        if (d < 100) {
+          ctx1.beginPath();
+          ctx1.moveTo(P1[i].x, P1[i].y);
+          ctx1.lineTo(P1[j].x, P1[j].y);
+          ctx1.strokeStyle = `rgba(74,158,255,${(1 - d / 100) * 0.5})`;
+          ctx1.lineWidth = 0.5;
+          ctx1.stroke();
+        }
+      }
+    }
+    requestAnimationFrame(draw1);
+  }
+  draw1();
+
+  /* ===== CONCEPT 2: Code Rain ===== */
+  const c2 = document.getElementById('canvas2');
+  const ctx2 = c2.getContext('2d');
+  resize(c2);
+  const fontSize = 13;
+  const cols = Math.floor(c2.width / fontSize);
+  const drops = Array(cols).fill(1).map(() => Math.random() * -50);
+  const chars = '01アイウエオカキクケコabcdefghijklmnop{}[]<>'.split('');
+  function draw2() {
+    ctx2.fillStyle = 'rgba(6,13,6,0.08)';
+    ctx2.fillRect(0, 0, c2.width, c2.height);
+    ctx2.font = fontSize + 'px monospace';
+    for (let i = 0; i < drops.length; i++) {
+      const ch = chars[Math.floor(Math.random() * chars.length)];
+      const y = drops[i] * fontSize;
+      ctx2.fillStyle = drops[i] === 1 ? '#aaffaa' : '#00aa44';
+      ctx2.fillText(ch, i * fontSize, y);
+      if (y > c2.height && Math.random() > 0.975) drops[i] = 0;
+      drops[i] += 0.5;
+    }
+    requestAnimationFrame(draw2);
+  }
+  draw2();
+
+  /* ===== CONCEPT 3: Glow Spheres ===== */
+  const c3 = document.getElementById('canvas3');
+  const ctx3 = c3.getContext('2d');
+  resize(c3);
+  const orbs = [
+    { x: c3.width * 0.25, y: c3.height * 0.4, r: 60, baseR: 60, speed: 0.008, phase: 0, color: '99,102,241' },
+    { x: c3.width * 0.7, y: c3.height * 0.55, r: 45, baseR: 45, speed: 0.012, phase: 2, color: '56,189,248' },
+    { x: c3.width * 0.5, y: c3.height * 0.3, r: 35, baseR: 35, speed: 0.006, phase: 4, color: '167,139,250' }
+  ];
+  let t3 = 0;
+  function draw3() {
+    ctx3.clearRect(0, 0, c3.width, c3.height);
+    t3 += 0.016;
+    orbs.forEach(orb => {
+      const pulse = Math.sin(t3 * orb.speed * 60 + orb.phase);
+      const cr = orb.baseR + pulse * 12;
+      orb.x += Math.sin(t3 * orb.speed * 30 + orb.phase) * 0.4;
+      orb.y += Math.cos(t3 * orb.speed * 25 + orb.phase) * 0.3;
+      const grad = ctx3.createRadialGradient(orb.x, orb.y, 0, orb.x, orb.y, cr);
+      grad.addColorStop(0, `rgba(${orb.color},0.35)`);
+      grad.addColorStop(0.5, `rgba(${orb.color},0.12)`);
+      grad.addColorStop(1, `rgba(${orb.color},0)`);
+      ctx3.beginPath();
+      ctx3.arc(orb.x, orb.y, cr, 0, Math.PI * 2);
+      ctx3.fillStyle = grad;
+      ctx3.fill();
+    });
+    requestAnimationFrame(draw3);
+  }
+  draw3();
+})();
+</script>

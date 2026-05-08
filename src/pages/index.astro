@@ -5,6 +5,8 @@ import Contact from '../components/Contact.astro';
 ---
 
 <Layout title="Dulal Denislam">
+  <canvas id="glow-canvas" aria-hidden="true"></canvas>
+
   <nav>
     <span class="logo">DD</span>
     <div class="links">
@@ -63,4 +65,69 @@ import Contact from '../components/Contact.astro';
     font-size: 0.82rem;
     border-top: 1px solid var(--border);
   }
+
+  #glow-canvas {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  nav, main, footer {
+    position: relative;
+    z-index: 1;
+  }
 </style>
+
+<script>
+  const canvas = document.getElementById('glow-canvas') as HTMLCanvasElement;
+  const ctx = canvas.getContext('2d')!;
+
+  function resize() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  const orbs = [
+    { x: 0.15, y: 0.2,  baseR: 28, speed: 0.022, phase: 0,   color: '110,231,183' },
+    { x: 0.8,  y: 0.6,  baseR: 22, speed: 0.018, phase: 2.1, color: '139,92,246'  },
+    { x: 0.5,  y: 0.85, baseR: 18, speed: 0.026, phase: 4.2, color: '56,189,248'  },
+    { x: 0.7,  y: 0.15, baseR: 20, speed: 0.02,  phase: 1.5, color: '110,231,183' },
+    { x: 0.3,  y: 0.65, baseR: 16, speed: 0.03,  phase: 3.3, color: '139,92,246'  },
+  ].map(o => ({
+    ...o,
+    cx: o.x * window.innerWidth,
+    cy: o.y * window.innerHeight,
+  }));
+
+  let t = 0;
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    t += 0.016;
+
+    orbs.forEach(orb => {
+      const pulse = Math.sin(t * orb.speed * 60 + orb.phase);
+      const r = orb.baseR + pulse * 8;
+
+      orb.cx += Math.sin(t * orb.speed * 35 + orb.phase) * 1.0;
+      orb.cy += Math.cos(t * orb.speed * 28 + orb.phase) * 0.8;
+
+      const grad = ctx.createRadialGradient(orb.cx, orb.cy, 0, orb.cx, orb.cy, r * 5);
+      grad.addColorStop(0,   `rgba(${orb.color},0.3)`);
+      grad.addColorStop(0.4, `rgba(${orb.color},0.1)`);
+      grad.addColorStop(1,   `rgba(${orb.color},0)`);
+
+      ctx.beginPath();
+      ctx.arc(orb.cx, orb.cy, r * 5, 0, Math.PI * 2);
+      ctx.fillStyle = grad;
+      ctx.fill();
+    });
+
+    requestAnimationFrame(draw);
+  }
+  draw();
+</script>
