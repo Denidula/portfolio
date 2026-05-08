@@ -1,0 +1,133 @@
+---
+---
+<section id="contact">
+  <div class="header">
+    <h2>Contact</h2>
+    <p>お気軽にお問い合わせください</p>
+  </div>
+
+  <form name="contact" method="POST" data-netlify="true">
+    <input type="hidden" name="form-name" value="contact" />
+
+    <div class="row">
+      <div class="field">
+        <label for="name">お名前</label>
+        <input type="text" id="name" name="name" required placeholder="山田 太郎" />
+      </div>
+      <div class="field">
+        <label for="email">メールアドレス</label>
+        <input type="email" id="email" name="email" required placeholder="your@email.com" />
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="message">メッセージ</label>
+      <textarea id="message" name="message" rows="5" required placeholder="お問い合わせ内容を入力してください"></textarea>
+    </div>
+
+    <button type="submit">送信する →</button>
+  </form>
+</section>
+
+<style>
+  section {
+    padding: 80px 0;
+    border-top: 1px solid var(--border);
+  }
+
+  .header {
+    margin-bottom: 40px;
+  }
+
+  h2 {
+    font-size: 2.2rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: 8px;
+  }
+
+  .header p {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  @media (max-width: 520px) {
+    .row {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  label {
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    letter-spacing: 0.04em;
+  }
+
+  input,
+  textarea {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 13px 16px;
+    color: var(--text);
+    font-size: 0.93rem;
+    font-family: inherit;
+    width: 100%;
+    transition: border-color 0.2s;
+  }
+
+  input:focus,
+  textarea:focus {
+    outline: none;
+    border-color: var(--accent);
+  }
+
+  input::placeholder,
+  textarea::placeholder {
+    color: #3a3a3a;
+  }
+
+  textarea {
+    resize: vertical;
+  }
+
+  button {
+    align-self: flex-start;
+    background: var(--accent);
+    color: #0a0a0a;
+    border: none;
+    border-radius: 10px;
+    padding: 14px 30px;
+    font-size: 0.93rem;
+    font-weight: 700;
+    cursor: pointer;
+    letter-spacing: 0.03em;
+    transition: opacity 0.2s, transform 0.1s;
+  }
+
+  button:hover {
+    opacity: 0.85;
+  }
+
+  button:active {
+    transform: scale(0.98);
+  }
+</style>

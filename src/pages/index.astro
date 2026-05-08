@@ -1,0 +1,66 @@
+---
+import Layout from '../layouts/Layout.astro';
+import About from '../components/About.astro';
+import Contact from '../components/Contact.astro';
+---
+
+<Layout title="Dulal Denislam">
+  <nav>
+    <span class="logo">DD</span>
+    <div class="links">
+      <a href="#about">About</a>
+      <a href="#contact">Contact</a>
+    </div>
+  </nav>
+
+  <main>
+    <About />
+    <Contact />
+  </main>
+
+  <footer>
+    <p>© 2026 Dulal Denislam</p>
+  </footer>
+</Layout>
+
+<style>
+  nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 36px 0 28px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .logo {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: var(--accent);
+    letter-spacing: 0.12em;
+  }
+
+  .links {
+    display: flex;
+    gap: 32px;
+  }
+
+  .links a {
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 0.88rem;
+    letter-spacing: 0.04em;
+    transition: color 0.2s;
+  }
+
+  .links a:hover {
+    color: var(--text);
+  }
+
+  footer {
+    text-align: center;
+    padding: 48px 0 40px;
+    color: var(--text-muted);
+    font-size: 0.82rem;
+    border-top: 1px solid var(--border);
+  }
+</style>
