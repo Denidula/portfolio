@@ -1,24 +1,25 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import About from '../components/About.astro';
-import Contact from '../components/Contact.astro';
 ---
 
-<Layout title="Dulal Denislam">
+<Layout title="Works | Dulal Denislam">
   <canvas id="glow-canvas" aria-hidden="true"></canvas>
 
   <nav>
-    <span class="logo">DD</span>
+    <a href="/" class="logo">DD</a>
     <div class="links">
-      <a href="#about">About</a>
-      <a href="/works">Works</a>
-      <a href="#contact">Contact</a>
+      <a href="/#about">About</a>
+      <a href="/works" class="active">Works</a>
+      <a href="/#contact">Contact</a>
     </div>
   </nav>
 
   <main>
-    <About />
-    <Contact />
+    <div class="hero">
+      <span class="badge fade-in">Portfolio</span>
+      <h1 class="fade-in">Works</h1>
+      <p class="coming-soon fade-in">Coming soon — 近日公開予定</p>
+    </div>
   </main>
 
   <footer>
@@ -27,6 +28,20 @@ import Contact from '../components/Contact.astro';
 </Layout>
 
 <style>
+  #glow-canvas {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  nav, main, footer {
+    position: relative;
+    z-index: 1;
+  }
+
   nav {
     display: flex;
     justify-content: space-between;
@@ -40,6 +55,7 @@ import Contact from '../components/Contact.astro';
     font-weight: 800;
     color: var(--accent);
     letter-spacing: 0.12em;
+    text-decoration: none;
   }
 
   .links {
@@ -59,26 +75,51 @@ import Contact from '../components/Contact.astro';
     color: var(--text);
   }
 
+  .links a.active {
+    color: var(--text);
+  }
+
+  main {
+    min-height: 70vh;
+    display: flex;
+    align-items: center;
+  }
+
+  .hero {
+    padding: 80px 0;
+  }
+
+  .badge {
+    display: inline-block;
+    background: rgba(110, 231, 183, 0.08);
+    color: var(--accent);
+    border: 1px solid rgba(110, 231, 183, 0.25);
+    padding: 5px 14px;
+    border-radius: 20px;
+    font-size: 0.78rem;
+    letter-spacing: 0.06em;
+    margin-bottom: 24px;
+  }
+
+  h1 {
+    font-size: clamp(2.8rem, 9vw, 4.5rem);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1.05;
+    margin-bottom: 20px;
+  }
+
+  .coming-soon {
+    font-size: 1.05rem;
+    color: var(--text-muted);
+  }
+
   footer {
     text-align: center;
     padding: 48px 0 40px;
     color: var(--text-muted);
     font-size: 0.82rem;
     border-top: 1px solid var(--border);
-  }
-
-  #glow-canvas {
-    position: fixed;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    z-index: 0;
-  }
-
-  nav, main, footer {
-    position: relative;
-    z-index: 1;
   }
 </style>
 
