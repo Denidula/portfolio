@@ -25,15 +25,43 @@
       <div class="card-label">趣味・興味</div>
       <ul class="hobby-list">
         <li>
-          <span class="hobby-title">✈&ensp;旅行</span>
+          <span class="hobby-title">
+            <svg class="hobby-icon" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <path d="M1 13 L15 3 L9 15 L7 9 Z"/>
+              <path d="M7 9 L15 3"/>
+            </svg>
+            旅行
+          </span>
           <span class="hobby-desc">自然豊かな場所が好きで、都会の喧騒を忘れられるスポットを求めてほぼ毎月どこかへ出かけている。</span>
         </li>
         <li>
-          <span class="hobby-title">🏃&ensp;運動</span>
+          <span class="hobby-title">
+            <svg class="hobby-icon" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <circle cx="10" cy="2.8" r="1.4"/>
+              <path d="M10 4.2 C9 6 8 7 8 8"/>
+              <path d="M8.5 5.8 L11.5 6.8"/>
+              <path d="M8.2 6.5 L6 5.5"/>
+              <path d="M8 8 L10 12 L8.5 14.5"/>
+              <path d="M8 8 L6 11.5 L7.5 14"/>
+            </svg>
+            運動
+          </span>
           <span class="hobby-desc">散歩・筋トレ・山登りが日課。近々、富士山登頂に挑戦予定。</span>
         </li>
         <li>
-          <span class="hobby-title">📖&ensp;読書</span>
+          <span class="hobby-title">
+            <svg class="hobby-icon" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <path d="M2 4 L8 3 L8 14 L2 13 Z"/>
+              <path d="M8 3 L14 4 L14 13 L8 14 Z"/>
+              <line x1="3.5" y1="6.5" x2="7" y2="6"/>
+              <line x1="3.5" y1="8.5" x2="7" y2="8"/>
+              <line x1="3.5" y1="10.5" x2="7" y2="10"/>
+              <line x1="9" y1="6" x2="12.5" y2="6.5"/>
+              <line x1="9" y1="8" x2="12.5" y2="8.5"/>
+              <line x1="9" y1="10" x2="12.5" y2="10.5"/>
+            </svg>
+            読書
+          </span>
           <span class="hobby-desc">ちょくちょく本を読む。周りに言うと信じてもらえないのであまり言わない。</span>
         </li>
       </ul>
@@ -170,9 +198,23 @@
   }
 
   .hobby-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
     font-size: 0.93rem;
     color: var(--text);
     font-weight: 600;
+  }
+
+  .hobby-icon {
+    width: 1em;
+    height: 1em;
+    flex-shrink: 0;
+    fill: none;
+    stroke: var(--accent);
+    stroke-width: 1.4;
+    stroke-linecap: round;
+    stroke-linejoin: round;
   }
 
   .hobby-desc {
