@@ -85,11 +85,20 @@ const { title } = Astro.props;
     z-index: 0;
   }
   /* Architectural grid + focal glow */
+  @keyframes mn-grid-drift {
+    from { background-position: 0 0, 0 0; }
+    to   { background-position: -80px 0, -80px 0; }
+  }
+  @keyframes mn-dots-drift {
+    from { background-position: 0 0; }
+    to   { background-position: -240px 0; }
+  }
   .mn-bg.grid-glow {
     background-image:
       linear-gradient(to right, rgba(232, 230, 226, 0.10) 1px, transparent 1px),
       linear-gradient(to bottom, rgba(232, 230, 226, 0.10) 1px, transparent 1px);
     background-size: 80px 80px, 80px 80px;
+    animation: mn-grid-drift 18s linear infinite;
   }
   .mn-bg.grid-glow::before {
     content: '';
@@ -97,8 +106,8 @@ const { title } = Astro.props;
     inset: 0;
     background-image: radial-gradient(circle, rgba(232, 230, 226, 0.55) 1.5px, transparent 2px);
     background-size: 240px 240px;
-    background-position: 0 0;
     opacity: 0.45;
+    animation: mn-dots-drift 54s linear infinite;
   }
   .mn-bg .glow-soft {
     position: absolute;
@@ -530,6 +539,7 @@ const { title } = Astro.props;
     .fade-up { transition: none !important; opacity: 1 !important; transform: none !important; }
     .mn-star { display: none; }
     .mn-trail-canvas { display: none; }
+    .mn-bg.grid-glow, .mn-bg.grid-glow::before { animation: none !important; }
   }
 
   /* ============================================================
