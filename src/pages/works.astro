@@ -1,8 +1,12 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import Footer from '../components/Footer.astro';
 ---
 
-<Layout title="Works | Dulal Denislam">
+<Layout
+  title="Works | Dulal Denislam"
+  description="Dulal Denislam（デニスラム ドゥラル）の制作実績・事例紹介ページ。公開できる事例を順次追加していきます。"
+>
   <div class="mn-root">
     <canvas class="mn-trail-canvas" aria-hidden="true"></canvas>
 
@@ -48,72 +52,10 @@ import Layout from '../layouts/Layout.astro';
       </main>
     </div>
 
-    <footer class="mn-footer-bottom">
-      <div class="mn-sns-row">
-        <a class="mn-sns-link" href="https://github.com/Denidula" target="_blank" rel="noopener" aria-label="GitHub">
-          <svg viewBox="0 0 16 16" width="15" height="15" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38v-1.34c-2.22.48-2.69-1.07-2.69-1.07-.36-.92-.89-1.17-.89-1.17-.73-.5.05-.49.05-.49.81.06 1.23.83 1.23.83.72 1.23 1.88.87 2.34.67.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.01.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.03 2.2-.82 2.2-.82.44 1.11.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48v2.2c0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
-        </a>
-        <a class="mn-sns-link" href="#" aria-label="X / Twitter">
-          <svg viewBox="0 0 16 16" width="13" height="13" fill="currentColor" aria-hidden="true"><path d="M9.52 6.78L15.46 0h-1.4L8.9 5.88 4.78 0H0l6.23 8.9L0 16h1.41l5.45-6.21L11.22 16H16M1.92 1.04h2.16l9.93 13.96h-2.16"/></svg>
-        </a>
-        <a class="mn-sns-link" href="#" aria-label="LinkedIn">
-          <svg viewBox="0 0 16 16" width="15" height="15" fill="currentColor" aria-hidden="true"><path d="M13.6 13.6h-2.37V9.9c0-.88-.02-2.02-1.23-2.02-1.23 0-1.42.96-1.42 1.96v3.76H6.2V6h2.27v1.04h.03c.32-.6 1.09-1.23 2.24-1.23 2.4 0 2.85 1.58 2.85 3.63v4.16zM3.55 4.96a1.37 1.37 0 110-2.74 1.37 1.37 0 010 2.74zm1.18 8.64H2.36V6h2.37v7.6zM14.78 0H1.22A1.21 1.21 0 000 1.18v13.64A1.21 1.21 0 001.22 16h13.56A1.21 1.21 0 0016 14.82V1.18A1.21 1.21 0 0014.78 0z"/></svg>
-        </a>
-      </div>
-      <div class="mn-copyright">© 2026 <b>Dulal Denislam</b></div>
-    </footer>
+    <Footer />
   </div>
 </Layout>
 
 <script>
-  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const star = document.querySelector('.mn-star') as HTMLElement | null;
-  if (star && !reduce) {
-    const name = document.querySelector('.mn-name') as HTMLElement | null;
-    let curY = name ? name.getBoundingClientRect().top + 30 : 120;
-    let t = 0;
-    const tick = () => {
-      t += 0.016;
-      const breath = 1 + Math.sin(t * 1.4) * 0.08;
-      star.style.top = curY + 'px';
-      star.style.setProperty('--breath', String(breath));
-      requestAnimationFrame(tick);
-    };
-    tick();
-  }
-
-  const canvas = document.querySelector('.mn-trail-canvas') as HTMLCanvasElement | null;
-  if (canvas && !reduce) {
-    const ctx = canvas.getContext('2d')!;
-    let w = (canvas.width = window.innerWidth);
-    let h = (canvas.height = window.innerHeight);
-    window.addEventListener('resize', () => { w = canvas.width = window.innerWidth; h = canvas.height = window.innerHeight; });
-    type Shape = { x: number; y: number; life: number; size: number; rotation: number; rotSpeed: number; type: string };
-    const shapes: Shape[] = [];
-    const TYPES = ['diamond', 'triangle', 'square'];
-    window.addEventListener('mousemove', (e) => {
-      if (Math.random() > 0.55) return;
-      shapes.push({ x: e.clientX, y: e.clientY, life: 1, size: 4 + Math.random() * 7, rotation: Math.random() * Math.PI * 2, rotSpeed: (Math.random() - 0.5) * 0.1, type: TYPES[Math.floor(Math.random() * TYPES.length)] });
-      if (shapes.length > 40) shapes.shift();
-    });
-    const draw = () => {
-      ctx.clearRect(0, 0, w, h);
-      shapes.forEach((s) => {
-        s.life -= 0.022; s.rotation += s.rotSpeed;
-        if (s.life <= 0) return;
-        const sz = s.size;
-        ctx.save(); ctx.translate(s.x, s.y); ctx.rotate(s.rotation);
-        ctx.globalAlpha = s.life * 0.75;
-        ctx.strokeStyle = `rgba(255,255,255,${s.life})`;
-        ctx.fillStyle = `rgba(255,255,255,${s.life * 0.12})`;
-        ctx.lineWidth = 0.8; ctx.beginPath();
-        if (s.type === 'diamond') { ctx.moveTo(0, -sz); ctx.lineTo(sz, 0); ctx.lineTo(0, sz); ctx.lineTo(-sz, 0); ctx.closePath(); }
-        else if (s.type === 'triangle') { ctx.moveTo(0, -sz); ctx.lineTo(sz * 0.866, sz * 0.5); ctx.lineTo(-sz * 0.866, sz * 0.5); ctx.closePath(); }
-        else { ctx.rect(-sz * 0.6, -sz * 0.6, sz * 1.2, sz * 1.2); }
-        ctx.fill(); ctx.stroke(); ctx.restore();
-      });
-      requestAnimationFrame(draw);
-    };
-    draw();
-  }
+  import '../scripts/effects';
 </script>

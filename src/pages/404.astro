@@ -1,0 +1,37 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<Layout title="404 | Dulal Denislam" description="お探しのページは見つかりませんでした。" noindex>
+  <div class="mn-root">
+    <div class="mn-bg grid-glow">
+      <div class="glow-soft"></div>
+    </div>
+
+    <header class="mn-topbar">
+      <a class="mn-brand-btn" href="/" style="text-decoration:none;">
+        <span class="dot"></span>
+        <span class="name">Dulal Denislam</span>
+      </a>
+      <nav class="mn-nav-top">
+        <a href="/#mn-about" data-nav="about">About</a>
+        <a href="/works" data-nav="works">Works</a>
+        <a href="/#mn-contact" data-nav="contact">Contact</a>
+      </nav>
+    </header>
+
+    <div class="mn-wrap" style="grid-template-columns: 1fr;">
+      <main class="mn-main">
+        <div class="mn-eyebrow"><span>404</span></div>
+        <h1 class="mn-name" style="font-size:56px;">Not found.</h1>
+        <p class="mn-tagline" style="opacity:1; transform:none; animation:none;">
+          お探しのページは見つかりませんでした。<br />
+          <a href="/" style="color:var(--accent-bright);">トップへ戻る →</a>
+        </p>
+      </main>
+    </div>
+
+    <Footer />
+  </div>
+</Layout>

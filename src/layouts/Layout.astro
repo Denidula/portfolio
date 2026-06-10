@@ -1,28 +1,58 @@
 ---
 interface Props {
   title: string;
+  description?: string;
+  noindex?: boolean;
 }
-const { title } = Astro.props;
+const {
+  title,
+  description = 'Dulal Denislam（デニスラム ドゥラル）のポートフォリオサイト。インフラチームのプロジェクトリーダーを務めながら、社内のAI導入推進に力を入れています。',
+  noindex = false,
+} = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+const ogImage = new URL('/og.png', Astro.site).href;
+const personLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: 'Dulal Denislam',
+  alternateName: 'デニスラム ドゥラル',
+  jobTitle: 'Project Leader / AI Specialist',
+  url: Astro.site?.href,
+  sameAs: ['https://github.com/Denidula'],
+};
 ---
 <!doctype html>
 <html lang="ja">
   <head>
     <meta charset="UTF-8" />
-    <meta name="description" content="Dulal Denislam（デニスラム ドゥラル）のポートフォリオサイト。インフラチームのプロジェクトリーダーを務めながら、社内のAI導入推進に力を入れています。" />
+    <meta name="description" content={description} />
     <meta name="viewport" content="width=device-width" />
-    <meta name="robots" content="index, follow" />
+    <meta name="robots" content={noindex ? 'noindex, nofollow' : 'index, follow'} />
     <meta name="google-site-verification" content="6UHogfCOmU3JJ5B7wPkKyD-ByqVYxU2vNJXRfYvNefw" />
-    <link rel="canonical" href={new URL(Astro.url.pathname, Astro.site).href} />
+    <link rel="canonical" href={canonical} />
     <link rel="sitemap" href="/sitemap.xml" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Dulal Denislam" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500&family=JetBrains+Mono:wght@300;400;500;600&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500&family=Geist+Mono:wght@400;500&display=swap"
       rel="stylesheet"
     />
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
+    <script type="application/ld+json" set:html={JSON.stringify(personLd)} />
   </head>
   <body>
     <slot />
@@ -41,7 +71,7 @@ const { title } = Astro.props;
     --text: #e8e6e2;
     --text-dim: #b0aea8;
     --text-muted: #8a8884;
-    --text-faint: #6a6a66;
+    --text-faint: #7d7d78;
     --hairline: #1a1a18;
     --border: #2a2a26;
     --accent-bright: #f5f3ef;
@@ -188,7 +218,7 @@ const { title } = Astro.props;
   }
   .mn-brand-btn .dot { width: 8px; height: 8px; background: #e8e6e2; border-radius: 50%; }
   .mn-brand-btn .caret {
-    font-size: 11px; color: #6a6a66;
+    font-size: 11px; color: #7d7d78;
     margin-left: 2px;
     transition: transform 0.25s ease;
     line-height: 1;
@@ -201,7 +231,7 @@ const { title } = Astro.props;
     display: inline-flex;
     align-items: baseline;
     padding: 4px 14px;
-    color: #6a6a66;
+    color: #7d7d78;
     text-decoration: none;
     font-size: 13px;
     cursor: pointer;
@@ -249,7 +279,7 @@ const { title } = Astro.props;
   .mn-eyebrow {
     font-family: 'Geist Mono', monospace;
     font-size: 11px;
-    color: #6a6a66;
+    color: #7d7d78;
     letter-spacing: 0.04em;
     margin-bottom: 28px;
     display: flex;
@@ -265,7 +295,7 @@ const { title } = Astro.props;
   }
   .mn-name-ja {
     font-size: 14px;
-    color: #6a6a66;
+    color: #7d7d78;
     margin-top: 18px;
     letter-spacing: 0.04em;
   }
@@ -291,7 +321,7 @@ const { title } = Astro.props;
   .mn-fact-k {
     font-family: 'Geist Mono', monospace;
     font-size: 10.5px;
-    color: #6a6a66;
+    color: #7d7d78;
     letter-spacing: 0.06em;
     margin-bottom: 6px;
   }
@@ -315,14 +345,14 @@ const { title } = Astro.props;
   .mn-section-num {
     font-family: 'Geist Mono', monospace;
     font-size: 11px;
-    color: #6a6a66;
+    color: #7d7d78;
     letter-spacing: 0.06em;
   }
   .mn-section-title { font-size: 18px; font-weight: 500; color: #f5f3ef; letter-spacing: -0.005em; }
   .mn-section-meta {
     font-family: 'Geist Mono', monospace;
     font-size: 10.5px;
-    color: #6a6a66;
+    color: #7d7d78;
     letter-spacing: 0.04em;
   }
 
@@ -349,7 +379,7 @@ const { title } = Astro.props;
   .mn-tl-tag {
     font-family: 'Geist Mono', monospace;
     font-size: 10.5px;
-    color: #6a6a66;
+    color: #7d7d78;
     text-align: right;
     letter-spacing: 0.04em;
   }
@@ -370,7 +400,7 @@ const { title } = Astro.props;
   .mn-hobby-tag {
     font-family: 'Geist Mono', monospace;
     font-size: 10.5px;
-    color: #6a6a66;
+    color: #7d7d78;
     letter-spacing: 0.04em;
     margin-bottom: 8px;
   }
@@ -387,7 +417,7 @@ const { title } = Astro.props;
   .mn-label {
     font-family: 'Geist Mono', monospace;
     font-size: 11px;
-    color: #6a6a66;
+    color: #7d7d78;
     letter-spacing: 0.06em;
   }
   .mn-input {
@@ -431,7 +461,7 @@ const { title } = Astro.props;
   .mn-submit-note {
     font-family: 'Geist Mono', monospace;
     font-size: 11px;
-    color: #6a6a66;
+    color: #7d7d78;
     letter-spacing: 0.04em;
   }
   .mn-form-status {
@@ -451,7 +481,7 @@ const { title } = Astro.props;
   .mn-meta-h {
     font-family: 'Geist Mono', monospace;
     font-size: 10.5px;
-    color: #6a6a66;
+    color: #7d7d78;
     letter-spacing: 0.06em;
     margin-bottom: 12px;
   }
@@ -479,7 +509,7 @@ const { title } = Astro.props;
     0% { transform: scale(0.6); opacity: 0.6; }
     100% { transform: scale(1.8); opacity: 0; }
   }
-  .mn-clock { font-family: 'Geist Mono', monospace; font-size: 11px; color: #6a6a66; letter-spacing: 0.04em; }
+  .mn-clock { font-family: 'Geist Mono', monospace; font-size: 11px; color: #7d7d78; letter-spacing: 0.04em; }
   .mn-clock b { color: #b0aea8; font-weight: 400; }
 
   /* ============================================================
@@ -507,7 +537,7 @@ const { title } = Astro.props;
     transition: color 0.15s, border-color 0.15s;
   }
   .mn-sns-link:hover { color: #e8e6e2; border-color: #4a4a48; }
-  .mn-copyright { font-family: 'Geist Mono', monospace; font-size: 11px; letter-spacing: 0.06em; color: #6a6a66; }
+  .mn-copyright { font-family: 'Geist Mono', monospace; font-size: 11px; letter-spacing: 0.06em; color: #7d7d78; }
   .mn-copyright b { color: #b0aea8; font-weight: 400; }
 
   /* ============================================================
