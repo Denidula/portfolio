@@ -1,5 +1,11 @@
 <!DOCTYPE html>
 <html>
+  <!--
+    Netlify Forms 検出用の静的フォーム定義。
+    Astro は静的出力なので index.html 内のフォームでも検出されるはずだが、
+    検出漏れでフォームが壊れると実害が大きいため「保険」として残している。
+    （消す場合は、デプロイ後に必ず送信テストをすること）
+  -->
   <body>
     <form name="contact" data-netlify="true" netlify-honeypot="bot-field" hidden>
       <input type="text" name="bot-field" />
