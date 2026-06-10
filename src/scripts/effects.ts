@@ -1,6 +1,10 @@
 // 背景エフェクト共通処理（index / works で共用）
 // - ガイドの星：ビューポート中央付近の見出しへ追従
-// - カーソルトレイル：マウス軌跡に幾何学模様を描画
+//   ※ rAF を常時回さず、scroll / resize をトリガーに補間 →
+//     目標に収束したらループを自動停止する（省電力）。
+//     「呼吸」の脈動は CSS アニメ（mn-breath）に移行済み。
+// - カーソルトレイル：マウス軌跡に幾何学模様を描画（全消滅でループ停止）
+// - fade-up：スクロール出現アニメ（汎用なのでここに集約）
 
 const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -13,31 +17,48 @@ if (star && !reduce) {
       ...Array.from(document.querySelectorAll('.mn-section-num')),
     ].filter(Boolean) as HTMLElement[];
   let anchors = getAnchors();
-  const firstRect = anchors[0]?.getBoundingClientRect();
-  let curY = firstRect ? firstRect.top + firstRect.height / 2 : window.innerHeight * 0.1;
-  let t = 0;
-  const tick = () => {
-    t += 0.016;
+
+  // ビューポート中央(42%)に最も近いアンカーの中心Yを目標とする
+  const targetY = () => {
     const vc = window.innerHeight * 0.42;
-    let best = anchors[0];
+    let best = window.innerHeight * 0.1;
     let bestDist = Infinity;
     for (const el of anchors) {
       const r = el.getBoundingClientRect();
       const c = r.top + r.height / 2;
       const d = Math.abs(c - vc);
-      if (d < bestDist) { bestDist = d; best = el; }
+      if (d < bestDist) { bestDist = d; best = c; }
     }
-    if (best) {
-      const r = best.getBoundingClientRect();
-      curY += (r.top + r.height / 2 - curY) * 0.085;
-    }
-    const breath = 1 + Math.sin(t * 1.4) * 0.08;
-    star.style.top = curY + 'px';
-    star.style.setProperty('--breath', String(breath));
-    requestAnimationFrame(tick);
+    return best;
   };
-  tick();
-  window.addEventListener('resize', () => { anchors = getAnchors(); });
+
+  let curY = targetY();
+  star.style.top = curY + 'px';
+
+  let raf = 0;
+  const step = () => {
+    const t = targetY();
+    const d = t - curY;
+    if (Math.abs(d) < 0.5) {
+      // 収束したらループ停止（次の scroll / resize で再開）
+      curY = t;
+      star.style.top = curY + 'px';
+      raf = 0;
+      return;
+    }
+    curY += d * 0.085;
+    star.style.top = curY + 'px';
+    raf = requestAnimationFrame(step);
+  };
+  const kick = () => {
+    if (!raf) raf = requestAnimationFrame(step);
+  };
+
+  window.addEventListener('scroll', kick, { passive: true });
+  window.addEventListener('resize', () => { anchors = getAnchors(); kick(); });
+  // フォント読み込みでレイアウトが動くことがあるため、ロード後にもう一度
+  window.addEventListener('load', () => { anchors = getAnchors(); kick(); });
+  kick();
 }
 
 // ===== Cursor trail (geometric) =====
@@ -50,10 +71,13 @@ if (canvas && !reduce && finePointer) {
   let h = 0;
   const resize = () => {
     const dpr = window.devicePixelRatio || 1;
-    w = window.innerWidth;
-    h = window.innerHeight;
-    canvas.width = w * dpr;
-    canvas.height = h * dpr;
+    // innerWidth はスクロールバーを含むため、canvas の実表示サイズを基準にする
+    // （ズレるとカーソルと描画位置が水平方向に数px ずれる）
+    const rect = canvas.getBoundingClientRect();
+    w = rect.width;
+    h = rect.height;
+    canvas.width = Math.round(w * dpr);
+    canvas.height = Math.round(h * dpr);
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   };
   resize();
@@ -107,4 +131,21 @@ if (canvas && !reduce && finePointer) {
     if (shapes.length > 40) shapes.shift();
     if (!running) { running = true; requestAnimationFrame(draw); }
   });
+}
+
+// ===== Fade-up on scroll（汎用） =====
+const fadeEls = document.querySelectorAll('.fade-up');
+if (fadeEls.length) {
+  const fadeObs = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((e) => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          fadeObs.unobserve(e.target);
+        }
+      });
+    },
+    { threshold: 0.12 }
+  );
+  fadeEls.forEach((el) => fadeObs.observe(el));
 }

@@ -1,5 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import Background from '../components/Background.astro';
 import Footer from '../components/Footer.astro';
 ---
 
@@ -8,37 +10,21 @@ import Footer from '../components/Footer.astro';
   description="Dulal Denislam（デニスラム ドゥラル）の制作実績・事例紹介ページ。公開できる事例を順次追加していきます。"
 >
   <div class="mn-root">
-    <canvas class="mn-trail-canvas" aria-hidden="true"></canvas>
+    <Background />
+    <Header active="works" />
 
-    <div class="mn-bg grid-glow">
-      <div class="glow-soft"></div>
-      <div class="mn-star"></div>
-    </div>
-
-    <header class="mn-topbar">
-      <a class="mn-brand-btn" href="/" style="text-decoration:none;">
-        <span class="dot"></span>
-        <span class="name">Dulal Denislam</span>
-      </a>
-      <nav class="mn-nav-top">
-        <a href="/#mn-about" data-nav="about">About</a>
-        <a href="/works" data-nav="works" class="active">Works</a>
-        <a href="/#mn-contact" data-nav="contact">Contact</a>
-      </nav>
-    </header>
-
-    <div class="mn-wrap" style="grid-template-columns: 1fr;">
+    <div class="mn-wrap">
       <main class="mn-main">
         <div class="mn-eyebrow"><span>WORKS</span></div>
-        <h1 class="mn-name" style="font-size:56px;">Coming soon.</h1>
-        <p class="mn-tagline" style="opacity:1; transform:none; animation:none;">
+        <h1 class="mn-name md">Coming soon.</h1>
+        <p class="mn-tagline static">
           公開できる事例を、これから<em>順次追加</em>していきます。
         </p>
 
-        <section class="mn-section" style="margin-top:72px;">
+        <section class="mn-section tight">
           <div class="mn-section-h">
             <span class="mn-section-num">—</span>
-            <span class="mn-section-title">準備中</span>
+            <h2 class="mn-section-title">準備中</h2>
             <span class="mn-section-meta">in progress</span>
           </div>
           <div class="mn-tl">
@@ -55,6 +41,10 @@ import Footer from '../components/Footer.astro';
     <Footer />
   </div>
 </Layout>
+
+<style is:global>
+  .mn-section.tight { margin-top: 72px; }
+</style>
 
 <script>
   import '../scripts/effects';

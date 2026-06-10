@@ -1,5 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import Background from '../components/Background.astro';
 import About from '../components/About.astro';
 import Contact from '../components/Contact.astro';
 import Footer from '../components/Footer.astro';
@@ -10,50 +12,27 @@ const chars = fullName.split('');
 
 <Layout title="Dulal Denislam">
   <div class="mn-root">
-    <canvas class="mn-trail-canvas" aria-hidden="true"></canvas>
+    <Background />
+    <Header active="about" drawer />
 
-    <div class="mn-bg grid-glow">
-      <div class="glow-soft"></div>
-      <div class="mn-star"></div>
-    </div>
-
-    <!-- TOP BAR -->
-    <header class="mn-topbar">
-      <button class="mn-brand-btn" id="brand-btn" aria-expanded="false" aria-controls="mn-drawer">
-        <span class="dot"></span>
-        <span class="name">Dulal Denislam</span>
-        <span class="caret" aria-hidden="true">▾</span>
-      </button>
-      <nav class="mn-nav-top" id="nav-top">
-        <a href="#mn-about" data-nav="about" class="active">About</a>
-        <a href="/works" data-nav="works">Works</a>
-        <a href="#mn-contact" data-nav="contact">Contact</a>
-      </nav>
-    </header>
-
-    <!-- META DRAWER -->
-    <div id="mn-drawer" class="mn-drawer" aria-hidden="true">
-      <div class="mn-drawer-inner">
-        <div class="mn-drawer-content">
-          <div>PROJECT LEADER</div>
-          <div>AI SPECIALIST</div>
-          <div style="margin-top:6px;">Shinjuku, <b>JP</b></div>
-          <div>Working since <b>2020</b></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="mn-wrap">
+    <div class="mn-wrap has-rail">
       <!-- MAIN -->
       <main class="mn-main">
         <div class="mn-eyebrow"><span>PORTFOLIO</span></div>
 
-        <h1 class="mn-name">
-          {chars.map((c, i) => (
-            <span class="char" style={`animation-delay:${(0.2 + i * 0.09).toFixed(2)}s`}>
-              {c === ' ' ? '\u00a0' : c}
-            </span>
-          ))}
+        <!--
+          1文字ずつのアニメ用spanはスクリーンリーダーだと
+          「D, u, l, a, l…」と読まれてしまうため、
+          h1 に aria-label / span側に aria-hidden を付与
+        -->
+        <h1 class="mn-name" aria-label={fullName}>
+          <span aria-hidden="true">
+            {chars.map((c, i) => (
+              <span class="char" style={`animation-delay:${(0.2 + i * 0.09).toFixed(2)}s`}>
+                {c === ' ' ? '\u00a0' : c}
+              </span>
+            ))}
+          </span>
         </h1>
         <div class="mn-name-ja">デニスラム ドゥラル</div>
 
@@ -116,7 +95,7 @@ const chars = fullName.split('');
 
         <div class="mn-meta-block">
           <div class="mn-meta-h">— UPCOMING</div>
-          <div class="mn-meta-body" style="font-size:12px; color:#8a8884;">
+          <div class="mn-meta-body sub">
             ・富士山登頂（夏）<br />
             ・登壇予定（社内AI事例）<br />
             ・Works ページを順次追加
@@ -130,59 +109,62 @@ const chars = fullName.split('');
   </div>
 </Layout>
 
+<!-- メタレール専用CSS（このページにしか無いため Layout から移動） -->
+<style is:global>
+  .mn-meta-rail { padding-top: 24px; position: sticky; top: 40px; }
+  .mn-meta-block { margin-bottom: 32px; }
+  .mn-meta-h {
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    color: var(--text-faint);
+    letter-spacing: 0.06em;
+    margin-bottom: 12px;
+  }
+  .mn-meta-body { font-size: 12.5px; color: var(--text-soft); line-height: 1.7; }
+  .mn-meta-body.sub { font-size: 12px; color: var(--text-muted); }
+  .mn-meta-body .item {
+    display: flex;
+    justify-content: space-between;
+    padding: 5px 0;
+    border-top: 1px solid var(--hairline);
+  }
+  .mn-meta-body .item:first-child { border-top: none; }
+  .mn-meta-body .item .v { font-family: var(--font-mono); font-size: 11px; color: var(--text-muted); }
+  .mn-status { display: flex; align-items: center; gap: 8px; font-size: 12.5px; color: var(--text); }
+  .mn-status .pulse { width: 8px; height: 8px; background: var(--text); border-radius: 50%; position: relative; }
+  .mn-status .pulse::before {
+    content: '';
+    position: absolute;
+    inset: -4px;
+    border-radius: 50%;
+    border: 1px solid var(--text);
+    opacity: 0.3;
+    animation: mn-pulse 2.2s ease-out infinite;
+  }
+  @keyframes mn-pulse {
+    0% { transform: scale(0.6); opacity: 0.6; }
+    100% { transform: scale(1.8); opacity: 0; }
+  }
+  .mn-clock { font-family: var(--font-mono); font-size: 11px; color: var(--text-faint); letter-spacing: 0.04em; }
+  .mn-clock b { color: var(--text-dim); font-weight: 400; }
+
+  @media (max-width: 1100px) {
+    .mn-meta-rail { display: none; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .mn-status .pulse::before { animation: none; }
+  }
+</style>
+
 <script>
   import '../scripts/effects';
-
-  // ===== Meta drawer toggle =====
-  const brand = document.getElementById('brand-btn');
-  const drawer = document.getElementById('mn-drawer');
-  if (brand && drawer) {
-    brand.addEventListener('click', () => {
-      const open = brand.classList.toggle('open');
-      drawer.classList.toggle('open', open);
-      brand.setAttribute('aria-expanded', String(open));
-      drawer.setAttribute('aria-hidden', String(!open));
-    });
-  }
-
-  // ===== D: Nav active sync =====
-  const navLinks = Array.from(document.querySelectorAll<HTMLAnchorElement>('#nav-top a'));
-  const setActive = (nav: string) => {
-    navLinks.forEach((a) => a.classList.toggle('active', a.dataset.nav === nav));
-  };
-  const watched = ['mn-about', 'mn-hobbies', 'mn-contact']
-    .map((id) => document.getElementById(id))
-    .filter(Boolean) as HTMLElement[];
-  if (watched.length) {
-    const navObs = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((e) => {
-          if (e.isIntersecting) setActive((e.target as HTMLElement).dataset.nav || 'about');
-        });
-      },
-      { threshold: 0.25, rootMargin: '-15% 0px -55% 0px' }
-    );
-    watched.forEach((s) => navObs.observe(s));
-  }
-
-  // ===== C: Fade-up on scroll =====
-  const fadeEls = document.querySelectorAll('.fade-up');
-  if (fadeEls.length) {
-    const fadeObs = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((e) => {
-          if (e.isIntersecting) {
-            e.target.classList.add('visible');
-            fadeObs.unobserve(e.target);
-          }
-        });
-      },
-      { threshold: 0.12 }
-    );
-    fadeEls.forEach((el) => fadeObs.observe(el));
-  }
+  // ドロワー / ナビ同期 → Header.astro
+  // フォーム送信        → Contact.astro
+  // fade-up            → effects.ts
+  // へそれぞれ移動済み。このページに残るのは時計だけ。
 
   // ===== Local clock (JST) =====
+  // 分境界に合わせて setTimeout を張り直す（最大15秒の表示ズレを解消）
   const clockEl = document.getElementById('local-clock');
   if (clockEl) {
     const fmt = new Intl.DateTimeFormat('ja-JP', {
@@ -192,39 +174,11 @@ const chars = fullName.split('');
       hour12: false,
     });
     const updateClock = () => {
-      clockEl.textContent = fmt.format(new Date());
+      const now = new Date();
+      clockEl.textContent = fmt.format(now);
+      const msToNextMinute = 60000 - (now.getSeconds() * 1000 + now.getMilliseconds());
+      setTimeout(updateClock, msToNextMinute + 50);
     };
     updateClock();
-    setInterval(updateClock, 15000);
-  }
-
-  // ===== Contact form (Netlify AJAX submit) =====
-  const form = document.querySelector('.mn-form') as HTMLFormElement | null;
-  const status = document.getElementById('cf-status');
-  if (form && status) {
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      status.classList.remove('error');
-      status.textContent = '送信中…';
-      try {
-        const data = new FormData(form);
-        const res = await fetch('/', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-          body: new URLSearchParams(data as any).toString(),
-        });
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        form.reset();
-        status.textContent = '送信しました。ありがとうございます — 通常 24 時間以内に返信します。';
-      } catch (err) {
-        status.classList.add('error');
-        status.textContent = '送信に失敗しました。時間をおいて再度お試しください。';
-      }
-    });
-  }
-
-  // sent=1 (fallback for non-JS POST redirect)
-  if (new URLSearchParams(location.search).get('sent') === '1' && status) {
-    status.textContent = '送信しました。ありがとうございます。';
   }
 </script>
