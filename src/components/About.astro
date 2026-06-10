@@ -1,10 +1,11 @@
 ---
 // 経歴タイムライン + 趣味
+// （.mn-tl-* は works でも使うため Layout のグローバルCSSに残している）
 ---
 <section class="mn-section fade-up" id="mn-about" data-nav="about">
   <div class="mn-section-h">
     <span class="mn-section-num">01</span>
-    <span class="mn-section-title">経歴 / Career</span>
+    <h2 class="mn-section-title">経歴 / Career</h2>
     <span class="mn-section-meta">5 entries</span>
   </div>
   <div class="mn-tl">
@@ -39,24 +40,44 @@
 <section class="mn-section fade-up" id="mn-hobbies" data-nav="about">
   <div class="mn-section-h">
     <span class="mn-section-num">02</span>
-    <span class="mn-section-title">趣味 / Off hours</span>
+    <h2 class="mn-section-title">趣味 / Off hours</h2>
     <span class="mn-section-meta">3 items</span>
   </div>
   <div class="mn-hobbies">
     <div class="mn-hobby">
       <div class="mn-hobby-tag">— TRAVEL</div>
-      <div class="mn-hobby-name">旅行</div>
+      <h3 class="mn-hobby-name">旅行</h3>
       <div class="mn-hobby-desc">自然のある場所が好み。月に一度はどこかへ出かけて、都会から距離を取るようにしている。</div>
     </div>
     <div class="mn-hobby">
       <div class="mn-hobby-tag">— EXERCISE</div>
-      <div class="mn-hobby-name">運動</div>
+      <h3 class="mn-hobby-name">運動</h3>
       <div class="mn-hobby-desc">散歩、筋トレ、山登りが日課。直近の目標は富士山登頂。</div>
     </div>
     <div class="mn-hobby">
       <div class="mn-hobby-tag">— READING</div>
-      <div class="mn-hobby-name">読書</div>
+      <h3 class="mn-hobby-name">読書</h3>
       <div class="mn-hobby-desc">ちょくちょく読んでいる。周りに言うと信じてもらえないので、あまり言わない。</div>
     </div>
   </div>
 </section>
+
+<!-- 趣味グリッド専用CSS（Layout から移動） -->
+<style is:global>
+  .mn-hobbies { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  .mn-hobby { padding-top: 16px; border-top: 1px solid var(--hairline); }
+  .mn-hobby-tag {
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    color: var(--text-faint);
+    letter-spacing: 0.04em;
+    margin-bottom: 8px;
+  }
+  .mn-hobby-name { font-size: 16px; font-weight: 500; color: var(--accent-bright); margin: 0 0 10px; }
+  .mn-hobby-desc { font-size: 13px; color: var(--text-muted); line-height: 1.65; }
+
+  @media (max-width: 760px) {
+    .mn-hobbies { grid-template-columns: 1fr; gap: 0; }
+    .mn-hobby { padding-top: 18px; padding-bottom: 4px; }
+  }
+</style>

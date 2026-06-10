@@ -1,0 +1,108 @@
+---
+// 背景レイヤー（グリッド + グロー + 星 + カーソルトレイル canvas）
+// props:
+//   effects … false で星とトレイルを省略（404 など静的なページ用）
+interface Props {
+  effects?: boolean;
+}
+const { effects = true } = Astro.props;
+---
+{effects && <canvas class="mn-trail-canvas" aria-hidden="true"></canvas>}
+
+<div class="mn-bg grid-glow">
+  <div class="glow-soft"></div>
+  {effects && <div class="mn-star"></div>}
+</div>
+
+<!-- 背景専用CSS（Layout から移動） -->
+<style is:global>
+  /* ビューポートに固定（星がスクロールに追従するため） */
+  .mn-bg {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+  }
+  /* Architectural grid + focal glow */
+  @keyframes mn-grid-drift {
+    from { background-position: 0 0, 0 0; }
+    to   { background-position: -80px 0, -80px 0; }
+  }
+  @keyframes mn-dots-drift {
+    from { background-position: 0 0; }
+    to   { background-position: -240px 0; }
+  }
+  .mn-bg.grid-glow {
+    background-image:
+      linear-gradient(to right, rgba(232, 230, 226, 0.10) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(232, 230, 226, 0.10) 1px, transparent 1px);
+    background-size: 80px 80px, 80px 80px;
+    animation: mn-grid-drift 18s linear infinite;
+  }
+  .mn-bg.grid-glow::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(circle, rgba(232, 230, 226, 0.55) 1.5px, transparent 2px);
+    background-size: 240px 240px;
+    opacity: 0.45;
+    animation: mn-dots-drift 54s linear infinite;
+  }
+  .mn-bg .glow-soft {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(circle 600px at 23% 7%, rgba(180, 200, 255, 0.18), transparent 65%),
+      radial-gradient(circle 500px at 75% 60%, rgba(255, 200, 150, 0.08), transparent 70%);
+  }
+  /* The guiding star — 呼吸はCSSアニメに移行（JSは位置の補間のみ担当） */
+  .mn-star {
+    position: absolute;
+    top: 7%;
+    left: 36px;
+    width: 6px;
+    height: 6px;
+    background: #ffffff;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    animation: mn-breath 4.5s ease-in-out infinite;
+    box-shadow:
+      0 0 24px 6px rgba(255, 255, 255, 0.85),
+      0 0 80px 24px rgba(180, 200, 255, 0.55),
+      0 0 200px 60px rgba(140, 170, 255, 0.28);
+    will-change: top;
+  }
+  @keyframes mn-breath {
+    0%, 100% { scale: 0.92; }
+    50%      { scale: 1.08; }
+  }
+  /* Cursor trail canvas
+     注意: canvas は置換要素なので inset:0 だけでは引き伸ばされない。
+     width/height を明示しないと、JS側の canvas.width = w × dpr の
+     内部解像度サイズ(Retinaでは画面の2倍)でそのまま表示され、
+     描画位置がカーソルから dpr 倍ズレる。 */
+  .mn-trail-canvas {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 10;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .mn-star { display: none; }
+    .mn-trail-canvas { display: none; }
+    .mn-bg.grid-glow, .mn-bg.grid-glow::before { animation: none !important; }
+  }
+
+  @media (max-width: 760px) {
+    .mn-star {
+      left: 16px;
+      box-shadow:
+        0 0 18px 4px rgba(255, 255, 255, 0.75),
+        0 0 60px 18px rgba(180, 200, 255, 0.45),
+        0 0 140px 40px rgba(140, 170, 255, 0.22);
+    }
+  }
+</style>

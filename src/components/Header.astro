@@ -1,0 +1,186 @@
+---
+// 共通ヘッダー（topbar + nav + メタドロワー）
+// props:
+//   active … 現在ページのナビ強調 ('about' | 'works' | 'contact')
+//   drawer … true ならブランド名がドロワー開閉ボタンになる（index 用）。
+//            false ならトップへのリンク（works / 404 用）。
+interface Props {
+  active?: 'about' | 'works' | 'contact';
+  drawer?: boolean;
+}
+const { active, drawer = false } = Astro.props;
+const cls = (nav: string) => (active === nav ? 'active' : undefined);
+// index ではページ内アンカー、それ以外はトップへ戻ってからアンカー
+const anchor = (id: string) => (drawer ? `#${id}` : `/#${id}`);
+---
+<header class="mn-topbar">
+  {drawer ? (
+    <button class="mn-brand-btn" id="brand-btn" aria-expanded="false" aria-controls="mn-drawer">
+      <span class="dot"></span>
+      <span class="name">Dulal Denislam</span>
+      <span class="caret" aria-hidden="true">▾</span>
+    </button>
+  ) : (
+    <a class="mn-brand-btn" href="/">
+      <span class="dot"></span>
+      <span class="name">Dulal Denislam</span>
+    </a>
+  )}
+  <nav class="mn-nav-top" id="nav-top">
+    <a href={anchor('mn-about')} data-nav="about" class={cls('about')}>About</a>
+    <a href="/works" data-nav="works" class={cls('works')}>Works</a>
+    <a href={anchor('mn-contact')} data-nav="contact" class={cls('contact')}>Contact</a>
+  </nav>
+</header>
+
+{drawer && (
+  <div id="mn-drawer" class="mn-drawer" aria-hidden="true">
+    <div class="mn-drawer-inner">
+      <div class="mn-drawer-content">
+        <div>PROJECT LEADER</div>
+        <div>AI SPECIALIST</div>
+        <div style="margin-top:6px;">Shinjuku, <b>JP</b></div>
+        <div>Working since <b>2020</b></div>
+      </div>
+    </div>
+  </div>
+)}
+
+<!-- ヘッダー専用CSS（Layout から移動） -->
+<style is:global>
+  .mn-topbar {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 50;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 18px 32px 18px 40px;
+    pointer-events: none;
+    background: linear-gradient(180deg, rgba(10,10,10,0.85) 0%, rgba(10,10,10,0.55) 60%, transparent 100%);
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+  }
+  .mn-brand-btn, .mn-nav-top { pointer-events: auto; }
+  .mn-brand-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: none;
+    border: none;
+    color: var(--text);
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: -0.005em;
+    cursor: pointer;
+    padding: 4px;
+    text-decoration: none;
+  }
+  .mn-brand-btn .dot { width: 8px; height: 8px; background: var(--text); border-radius: 50%; }
+  .mn-brand-btn .caret {
+    font-size: 11px; color: var(--text-faint);
+    margin-left: 2px;
+    transition: transform 0.25s ease;
+    line-height: 1;
+  }
+  .mn-brand-btn.open .caret { transform: rotate(180deg); color: var(--text); }
+  .mn-brand-btn:hover .caret { color: var(--text-dim); }
+
+  .mn-nav-top { display: flex; gap: 0; align-items: baseline; }
+  .mn-nav-top a {
+    display: inline-flex;
+    align-items: baseline;
+    padding: 4px 14px;
+    color: var(--text-faint);
+    text-decoration: none;
+    font-size: 13px;
+    cursor: pointer;
+    transition: color 0.15s;
+  }
+  .mn-nav-top a + a { border-left: 1px solid var(--border); }
+  .mn-nav-top a:hover, .mn-nav-top a.active { color: var(--text); }
+
+  .mn-drawer {
+    position: fixed;
+    top: 50px;
+    left: 40px;
+    z-index: 49;
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    pointer-events: none;
+  }
+  .mn-drawer.open { grid-template-rows: 1fr; pointer-events: auto; }
+  .mn-drawer-inner { overflow: hidden; min-height: 0; }
+  .mn-drawer-content {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-soft);
+    letter-spacing: 0.06em;
+    line-height: 1.85;
+    padding: 10px 14px 12px;
+    opacity: 0;
+    transform: translateY(-4px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-top: none;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    white-space: nowrap;
+  }
+  .mn-drawer.open .mn-drawer-content { opacity: 1; transform: translateY(0); transition-delay: 0.12s; }
+  .mn-drawer-content b { color: var(--text); font-weight: 400; }
+
+  @media (max-width: 760px) {
+    .mn-topbar { padding: 14px 16px 14px 20px; }
+    .mn-brand-btn { font-size: 13.5px; }
+    .mn-nav-top a { padding: 4px 10px; font-size: 12.5px; }
+    .mn-drawer { top: 44px; left: 20px; right: 20px; }
+    .mn-drawer-content { font-size: 10.5px; line-height: 1.95; }
+  }
+</style>
+
+<script>
+  // ===== Meta drawer toggle（外側クリック / Escape で閉じる対応） =====
+  const brand = document.getElementById('brand-btn');
+  const drawerEl = document.getElementById('mn-drawer');
+  if (brand && drawerEl) {
+    const isOpen = () => brand.classList.contains('open');
+    const setOpen = (open: boolean) => {
+      brand.classList.toggle('open', open);
+      drawerEl.classList.toggle('open', open);
+      brand.setAttribute('aria-expanded', String(open));
+      drawerEl.setAttribute('aria-hidden', String(!open));
+    };
+    brand.addEventListener('click', () => setOpen(!isOpen()));
+    document.addEventListener('click', (e) => {
+      if (!isOpen()) return;
+      const t = e.target as Node;
+      if (brand.contains(t) || drawerEl.contains(t)) return;
+      setOpen(false);
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && isOpen()) setOpen(false);
+    });
+  }
+
+  // ===== Nav active sync（data-nav を持つセクションがあるページのみ動作） =====
+  const navLinks = Array.from(document.querySelectorAll<HTMLAnchorElement>('#nav-top a'));
+  const watched = Array.from(document.querySelectorAll<HTMLElement>('main [data-nav]'));
+  if (navLinks.length && watched.length) {
+    const setActive = (nav: string) => {
+      navLinks.forEach((a) => a.classList.toggle('active', a.dataset.nav === nav));
+    };
+    const navObs = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting) setActive((e.target as HTMLElement).dataset.nav || 'about');
+        });
+      },
+      { threshold: 0.25, rootMargin: '-15% 0px -55% 0px' }
+    );
+    watched.forEach((s) => navObs.observe(s));
+  }
+</script>

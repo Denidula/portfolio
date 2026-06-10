@@ -10,3 +10,45 @@
   </div>
   <div class="mn-copyright">© 2026 <b>Dulal Denislam</b></div>
 </footer>
+
+<!-- フッター専用CSS（Layout から移動） -->
+<style is:global>
+  .mn-footer-bottom {
+    margin-top: 96px;
+    padding: 32px 140px 36px;
+    border-top: 1px solid var(--hairline);
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    gap: 24px;
+  }
+  .mn-sns-row { display: flex; gap: 8px; }
+  .mn-sns-link {
+    width: 36px; height: 36px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    text-decoration: none;
+    cursor: pointer;
+    transition: color 0.15s, border-color 0.15s;
+  }
+  .mn-sns-link:hover { color: var(--text); border-color: var(--border-3); }
+  .mn-copyright { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.06em; color: var(--text-faint); }
+  .mn-copyright b { color: var(--text-dim); font-weight: 400; }
+
+  @media (max-width: 1100px) {
+    .mn-footer-bottom { padding: 28px 88px 36px; }
+  }
+  @media (max-width: 760px) {
+    .mn-footer-bottom {
+      margin-top: 64px;
+      grid-template-columns: 1fr;
+      gap: 18px;
+      padding: 26px 20px 32px;
+      text-align: center;
+    }
+    .mn-sns-row { justify-content: center; }
+  }
+</style>
