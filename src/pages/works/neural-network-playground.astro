@@ -1,0 +1,160 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Header from '../../components/Header.astro';
+import Background from '../../components/Background.astro';
+import Footer from '../../components/Footer.astro';
+import { works } from '../../data/works';
+
+const work = works.find(w => w.slug === 'neural-network-playground')!;
+---
+
+<Layout
+  title="Neural Network Playground | Dulal Denislam"
+  description={work.summary}
+  ogImage={work.ogImage}
+>
+  <div class="mn-root">
+    <Background />
+    <Header active="works" />
+
+    <div class="mn-wrap">
+      <main class="mn-main">
+        <div class="mn-eyebrow">
+          <a href="/works/" class="mn-crumb">WORKS</a>
+          <span>/</span>
+          <span>CASE 01</span>
+        </div>
+        <h1 class="mn-name md">Neural Network Playground.</h1>
+        <p class="mn-tagline static">ニューラルネットワークの学習過程を、ブラウザで<em>リアルタイムに可視化</em>するWebアプリ。順伝播・逆伝播・勾配降下法を、外部ライブラリなしでゼロから実装。</p>
+
+        <div class="mn-hero-foot">
+          <div>
+            <div class="mn-fact-k">YEAR</div>
+            <div class="mn-fact-v">2026</div>
+          </div>
+          <div>
+            <div class="mn-fact-k">TYPE</div>
+            <div class="mn-fact-v">Personal project</div>
+          </div>
+          <div>
+            <div class="mn-fact-k">STACK</div>
+            <div class="mn-fact-v">Vanilla JS · Canvas</div>
+          </div>
+          <div>
+            <div class="mn-fact-k">LINKS</div>
+            <div class="mn-fact-v">
+              <a href={work.demo} target="_blank" rel="noopener" class="mn-case-link">Demo ↗</a>
+              <a href={work.repo} target="_blank" rel="noopener" class="mn-case-link">GitHub ↗</a>
+            </div>
+          </div>
+        </div>
+
+        <figure class="mn-case-shot fade-up">
+          <img src={work.image} alt={work.imageAlt} width="1280" height="800" />
+          <figcaption>渦巻きデータセットを学習中の画面</figcaption>
+        </figure>
+
+        <section class="mn-section fade-up">
+          <div class="mn-section-h">
+            <span class="mn-section-num">01</span>
+            <h2 class="mn-section-title">概要 / Overview</h2>
+            <span class="mn-section-meta">case study</span>
+          </div>
+          <div class="mn-case-prose">
+            <p>TensorFlow Playground に着想を得て、フレームワーク・ライブラリ・ビルドツールを一切使わず、素のHTML / CSS / JavaScriptだけで実装した教育用デモ。データセットや層構成・学習率を調整して「再生」を押すと、ネットワークが分類を学んでいく過程が、決定境界のヒートマップとネットワーク図にリアルタイムで描かれる。</p>
+            <p>題材としてあえて有名なものを選び、中身をすべて自分の手で書くことに価値を置いた。学習ループも可視化も含めて依存はゼロ。GitHub Pages 上でそのまま動く。</p>
+          </div>
+        </section>
+
+        <section class="mn-section fade-up">
+          <div class="mn-section-h">
+            <span class="mn-section-num">02</span>
+            <h2 class="mn-section-title">特徴 / Highlights</h2>
+            <span class="mn-section-meta">5 entries</span>
+          </div>
+          <div class="mn-tl">
+            <div class="mn-tl-row">
+              <div class="mn-tl-year">01</div>
+              <div class="mn-tl-text">順伝播・逆伝播・ミニバッチSGD・Xavier初期化・二値交差エントロピーを js/nn.js に自前実装。<span class="muted">「AIの仕組みを理解して実装できる」ことの証明が、この作品の核。</span></div>
+              <div class="mn-tl-tag">CORE</div>
+            </div>
+            <div class="mn-tl-row">
+              <div class="mn-tl-year">02</div>
+              <div class="mn-tl-text">決定境界のヒートマップが学習とともに変形していく。ネットワーク図は重みの太さと正負の色、学習中に信号が流れるアニメーション、各ニューロンが学んだ特徴のミニヒートマップまで描画。<span class="muted">学習損失・テスト損失は2本線グラフで追跡。</span></div>
+              <div class="mn-tl-tag">VISUALIZE</div>
+            </div>
+            <div class="mn-tl-row">
+              <div class="mn-tl-year">03</div>
+              <div class="mn-tl-text">4種のデータセット（2つの円 / XOR / 渦巻き / ガウス）、隠れ層0〜4層・各層1〜8ニューロン、活性化関数3種、対数スケールの学習率、ノイズ調整。<span class="muted">隠れ層0で線形の限界、ノイズ増で過学習——教育的な発見を仕込んである。</span></div>
+              <div class="mn-tl-tag">INTERACT</div>
+            </div>
+            <div class="mn-tl-row">
+              <div class="mn-tl-year">04</div>
+              <div class="mn-tl-text">requestAnimationFrame で60fpsを維持。<span class="muted">ヒートマップは粗いグリッド計算+拡大描画、重い再計算はフレーム間引きで吸収。</span></div>
+              <div class="mn-tl-tag">PERF</div>
+            </div>
+            <div class="mn-tl-row">
+              <div class="mn-tl-year">05</div>
+              <div class="mn-tl-text">全UIに初心者向けの「?」ツールチップ。<span class="muted">ページ下部には機械学習の仕組みの平易な解説を掲載。UIは日本語。</span></div>
+              <div class="mn-tl-tag">LEARN</div>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <Footer />
+  </div>
+</Layout>
+
+<style is:global>
+  .mn-crumb {
+    color: var(--text-faint);
+    text-decoration: none;
+    transition: color 0.15s;
+  }
+  .mn-crumb:hover { color: var(--text); }
+
+  .mn-case-link {
+    color: var(--text);
+    text-decoration: underline;
+    text-decoration-color: var(--border-3);
+    text-underline-offset: 3px;
+    margin-right: 14px;
+    font-size: 13.5px;
+    transition: text-decoration-color 0.15s;
+  }
+  .mn-case-link:hover { text-decoration-color: var(--text-soft); }
+
+  .mn-case-shot {
+    margin-top: 48px;
+  }
+  .mn-case-shot img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border: 1px solid var(--border);
+  }
+  .mn-case-shot figcaption {
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    color: var(--text-faint);
+    margin-top: 10px;
+  }
+
+  .mn-case-prose p {
+    font-size: 14px;
+    color: var(--text);
+    line-height: 1.85;
+    max-width: 640px;
+  }
+  .mn-case-prose p + p { margin-top: 1.2em; }
+
+  @media (max-width: 760px) {
+    .mn-case-shot { margin-top: 32px; }
+  }
+</style>
+
+<script>
+  import '../../scripts/effects';
+</script>

@@ -3,6 +3,8 @@ import Layout from '../layouts/Layout.astro';
 import Header from '../components/Header.astro';
 import Background from '../components/Background.astro';
 import Footer from '../components/Footer.astro';
+import WorkCard from '../components/WorkCard.astro';
+import { works } from '../data/works';
 ---
 
 <Layout
@@ -16,15 +18,26 @@ import Footer from '../components/Footer.astro';
     <div class="mn-wrap">
       <main class="mn-main">
         <div class="mn-eyebrow"><span>WORKS</span></div>
-        <h1 class="mn-name md">Coming soon.</h1>
+        <h1 class="mn-name md">Works.</h1>
         <p class="mn-tagline static">
-          公開できる事例を、これから<em>順次追加</em>していきます。
+          公開できる事例を<em>順次追加</em>しています。
         </p>
 
-        <section class="mn-section tight">
+        <section class="mn-section tight fade-up">
           <div class="mn-section-h">
-            <span class="mn-section-num">—</span>
-            <h2 class="mn-section-title">準備中</h2>
+            <span class="mn-section-num">01</span>
+            <h2 class="mn-section-title">公開作品 / Selected works</h2>
+            <span class="mn-section-meta">{works.length} item{works.length > 1 ? 's' : ''}</span>
+          </div>
+          <div class="mn-works-grid">
+            {works.map(w => <WorkCard work={w} />)}
+          </div>
+        </section>
+
+        <section class="mn-section fade-up">
+          <div class="mn-section-h">
+            <span class="mn-section-num">02</span>
+            <h2 class="mn-section-title">非公開案件 / NDA</h2>
             <span class="mn-section-meta">in progress</span>
           </div>
           <div class="mn-tl">
@@ -44,6 +57,17 @@ import Footer from '../components/Footer.astro';
 
 <style is:global>
   .mn-section.tight { margin-top: 72px; }
+  .mn-works-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+  }
+  @media (max-width: 760px) {
+    .mn-works-grid {
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+  }
 </style>
 
 <script>

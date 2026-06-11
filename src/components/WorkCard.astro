@@ -1,0 +1,95 @@
+---
+// 作品一覧カード。カード全体がリンクになる
+import type { Work } from '../data/works';
+interface Props { work: Work; }
+const { work } = Astro.props;
+---
+<a href={`/works/${work.slug}/`} class="mn-work-card">
+  <div class="mn-work-thumb">
+    <img src={work.image} alt={work.imageAlt} width="1280" height="800" loading="lazy" />
+  </div>
+  <div class="mn-work-body">
+    <div class="mn-work-meta">{work.year} · {work.type}</div>
+    <h3 class="mn-work-title">{work.title}</h3>
+    <p class="mn-work-desc">{work.summary}</p>
+    <div class="mn-work-tags">
+      {work.tags.map(tag => <span>{tag}</span>)}
+    </div>
+    <div class="mn-work-cta">View case →</div>
+  </div>
+</a>
+
+<style is:global>
+  .mn-work-card {
+    display: block;
+    border: 1px solid var(--border);
+    background: rgba(255, 255, 255, 0.02);
+    text-decoration: none;
+    transition: border-color 0.2s, background 0.2s;
+  }
+  .mn-work-card:hover {
+    border-color: var(--border-3);
+    background: rgba(255, 255, 255, 0.04);
+  }
+  .mn-work-card:hover .mn-work-cta {
+    color: var(--accent-bright);
+  }
+
+  .mn-work-thumb {
+    border-bottom: 1px solid var(--hairline);
+    overflow: hidden;
+  }
+  .mn-work-thumb img {
+    display: block;
+    width: 100%;
+    height: auto; /* height属性に勝たせない（aspect-ratioを有効にする） */
+    aspect-ratio: 16 / 10;
+    object-fit: cover;
+    transition: filter 0.3s;
+  }
+  .mn-work-card:hover .mn-work-thumb img {
+    filter: brightness(1.06);
+  }
+
+  .mn-work-body {
+    padding: 18px 20px 20px;
+  }
+  .mn-work-meta {
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    letter-spacing: 0.05em;
+    color: var(--text-faint);
+    margin-bottom: 8px;
+  }
+  .mn-work-title {
+    font-size: 17px;
+    font-weight: 500;
+    color: var(--accent-bright);
+    margin: 0 0 10px;
+    letter-spacing: -0.005em;
+  }
+  .mn-work-desc {
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.65;
+    margin-bottom: 12px;
+  }
+  .mn-work-tags {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--text-faint);
+    letter-spacing: 0.04em;
+    margin-bottom: 14px;
+  }
+  .mn-work-tags span + span::before {
+    content: '·';
+    margin: 0 6px;
+  }
+  .mn-work-cta {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-dim);
+    letter-spacing: 0.04em;
+    transition: color 0.2s;
+  }
+</style>

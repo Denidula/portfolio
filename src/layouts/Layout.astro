@@ -3,14 +3,16 @@ interface Props {
   title: string;
   description?: string;
   noindex?: boolean;
+  ogImage?: string;
 }
 const {
   title,
   description = 'Dulal Denislam（デニスラム ドゥラル）のポートフォリオサイト。インフラチームのプロジェクトリーダーを務めながら、社内のAI導入推進に力を入れています。',
   noindex = false,
+  ogImage: ogImageProp = '/og.png',
 } = Astro.props;
 const canonical = new URL(Astro.url.pathname, Astro.site).href;
-const ogImage = new URL('/og.png', Astro.site).href;
+const ogImage = new URL(ogImageProp, Astro.site).href;
 const personLd = {
   '@context': 'https://schema.org',
   '@type': 'Person',
