@@ -1,30 +1,36 @@
 ---
-// 作品一覧カード。カード全体がリンクになる
+// 作品一覧カード。
+// カード全体クリック→詳細ページ（タイトルリンクを ::after で全面に引き伸ばすstretched-link）。
+// 「Live demo ↗」だけは z-index を上げて別リンクとして外部デモへ飛ばす。
 import type { Work } from '../data/works';
 interface Props { work: Work; }
 const { work } = Astro.props;
 ---
-<a href={`/works/${work.slug}/`} class="mn-work-card">
+<article class="mn-work-card">
   <div class="mn-work-thumb">
     <img src={work.image} alt={work.imageAlt} width="1280" height="800" loading="lazy" />
   </div>
   <div class="mn-work-body">
     <div class="mn-work-meta">{work.year} · {work.type}</div>
-    <h3 class="mn-work-title">{work.title}</h3>
+    <h3 class="mn-work-title">
+      <a href={`/works/${work.slug}/`} class="mn-work-link">{work.title}</a>
+    </h3>
     <p class="mn-work-desc">{work.summary}</p>
     <div class="mn-work-tags">
       {work.tags.map(tag => <span>{tag}</span>)}
     </div>
-    <div class="mn-work-cta">View case →</div>
+    <div class="mn-work-actions">
+      <span class="mn-work-cta" aria-hidden="true">View case →</span>
+      <a href={work.demo} target="_blank" rel="noopener" class="mn-work-demo">Live demo ↗</a>
+    </div>
   </div>
-</a>
+</article>
 
 <style is:global>
   .mn-work-card {
-    display: block;
+    position: relative;
     border: 1px solid var(--border);
     background: rgba(255, 255, 255, 0.02);
-    text-decoration: none;
     transition: border-color 0.2s, background 0.2s;
   }
   .mn-work-card:hover {
@@ -64,9 +70,18 @@ const { work } = Astro.props;
   .mn-work-title {
     font-size: 17px;
     font-weight: 500;
-    color: var(--accent-bright);
     margin: 0 0 10px;
     letter-spacing: -0.005em;
+  }
+  /* カード全面をクリック領域にする（stretched link） */
+  .mn-work-link {
+    color: var(--accent-bright);
+    text-decoration: none;
+  }
+  .mn-work-link::after {
+    content: '';
+    position: absolute;
+    inset: 0;
   }
   .mn-work-desc {
     font-size: 13px;
@@ -85,11 +100,30 @@ const { work } = Astro.props;
     content: '·';
     margin: 0 6px;
   }
-  .mn-work-cta {
+  .mn-work-actions {
+    display: flex;
+    align-items: baseline;
+    gap: 20px;
     font-family: var(--font-mono);
     font-size: 11px;
-    color: var(--text-dim);
     letter-spacing: 0.04em;
+  }
+  .mn-work-cta {
+    color: var(--text-dim);
     transition: color 0.2s;
+  }
+  /* stretched link の上に出して個別クリックできるように */
+  .mn-work-demo {
+    position: relative;
+    z-index: 1;
+    color: var(--text-faint);
+    text-decoration: underline;
+    text-decoration-color: var(--border-3);
+    text-underline-offset: 3px;
+    transition: color 0.15s, text-decoration-color 0.15s;
+  }
+  .mn-work-demo:hover {
+    color: var(--text);
+    text-decoration-color: var(--text-soft);
   }
 </style>
